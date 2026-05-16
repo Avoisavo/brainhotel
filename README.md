@@ -1,15 +1,249 @@
-# Monad Blitz Kuala Lumpur Submission Process
+# 🧠 Brain Hotel
 
-## Steps to prepare your project repo:
+Brain Hotel is a knowledge-preservation platform where experts can upload their experience, memories, strategies, and lessons learned into an AI-powered vault. Other users can then explore and query those memories through an interactive hotel-style interface.
 
-1. Visit the `monad-blitz-kl` repo (link [here](https://github.com/monad-developers/monad-blitz-kl)) and fork it.
+Instead of letting valuable knowledge disappear when someone retires, changes careers, or moves on, Brain Hotel turns human experience into searchable, living memory rooms.
 
-![1.png](/screenshots/1.png)
+---
 
-2. Give it your project name, a one-liner description, make sure you are forking `main` branch and click `Create Fork`
+## 📖 Story
 
-![2.png](https://github.com/monad-developers/monad-blitz-denver/raw/main/screenshots/2.png?raw=true)
+Imagine a person named Jason.
 
-1. In your fork you can make all the changes you want, add code of your project, create branches, add information to `README.md` , you can change anything and everything.
+Jason has joined hackathons for 3 years. During that time, he has won over 40 hackathons. Everyone wonders:
 
-2. For next steps head to [Blitz Portal](https://blitz.devnads.com)
+> How does Jason keep winning?
+> How does he choose ideas?
+> How does he build so fast?
+> How does he pitch so well?
+> What mistakes has he learned from?
+
+But one day, Jason decides to retire from hackathons and focus on his own startup.
+
+His knowledge does not disappear immediately, but it becomes hard to access. New hackers can no longer easily learn from his experience. His strategies, stories, failures, and decision-making process may slowly be forgotten.
+
+The same problem happens everywhere.
+
+A doctor with 30 years of experience retires.
+A founder exits their company.
+A teacher stops teaching.
+A designer leaves the industry.
+A senior engineer moves on.
+
+Their experience is incredibly valuable, but most of it is never properly captured.
+
+Brain Hotel solves this by giving every expert a place to store their mind.
+
+---
+
+## ❗ Problem
+
+Human experience is one of the most valuable forms of knowledge, but it is often lost when people retire, change jobs, or leave a community.
+
+Most knowledge-sharing platforms only capture surface-level content, such as blog posts, videos, or documents. They do not preserve how a person thinks, makes decisions, solves problems, or reflects on past experience.
+
+For example:
+
+- New hackathon participants want to learn from experienced winners.
+- Junior doctors want to understand how senior doctors make decisions.
+- Startup founders want to learn from experienced entrepreneurs.
+- Students want access to the thinking process of experts.
+
+However, this knowledge is usually scattered across documents, chats, videos, notes, and memories. It is difficult to organize, search, and interact with.
+
+The result is a major knowledge gap between experienced people and beginners.
+
+---
+
+## 💡 Solution
+
+Brain Hotel is a platform where users can upload their knowledge, experience, notes, documents, videos, and stories. The platform automatically turns this content into a structured AI memory vault, similar to an Obsidian vault.
+
+Once the vault is created, other users can visit the platform and query that person's memory.
+
+For example:
+
+A beginner hackathon participant can enter Jason's memory room and ask:
+
+> "How should I choose a good hackathon idea?"
+
+> "What makes a winning pitch?"
+
+> "What mistakes did Jason make in his first few hackathons?"
+
+> "How should I divide tasks in a 3-person team?"
+
+The AI answers based on Jason's uploaded knowledge, not generic internet information.
+
+The frontend experience is designed like a hotel. Each floor represents a category of knowledge, and each room represents a person's memory vault.
+
+For example:
+
+- Floor 1: Founders
+- Floor 2: Hackathon Winners
+- Floor 3: Doctors
+- Floor 4: Engineers
+
+If users want to learn from Jason, they go to Level 2 and enter Jason's room.
+
+---
+
+## 🏨 Product Concept
+
+Brain Hotel makes knowledge feel explorable.
+
+Instead of a boring search bar, users move through a pixel-art hotel where each room contains a different person's mind.
+
+Each expert becomes a "guest" or "resident" inside the hotel. Their uploaded knowledge becomes their room, and users can visit the room to ask questions, explore topics, or follow guided learning paths.
+
+The experience is designed to feel like:
+
+> "Walking into someone's brain and learning directly from their memories."
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart TD
+    A[Expert Uploads Knowledge] --> B[File Processing Layer]
+    B --> C[Text Extraction]
+    B --> D[Audio / Video Transcription]
+    C --> E[Chunking & Cleaning]
+    D --> E
+    E --> F[Embedding Generation]
+    F --> G[Vector Database]
+    E --> H[Knowledge Graph / Vault Structure]
+
+    I[User Enters Brain Hotel] --> J[Selects Floor]
+    J --> K[Selects Expert Room]
+    K --> L[User Asks a Question]
+
+    L --> M[Retrieval Engine]
+    M --> G
+    M --> H
+    G --> N[Relevant Memories]
+    H --> N
+
+    N --> O[LLM Response Generator]
+    O --> P[Answer with Sources]
+    P --> Q[Interactive Chat UI]
+```
+
+### System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        BROWSER (Client)                         │
+│                                                                 │
+│  ┌────────────┐  ┌─────────────┐  ┌──────────────────────────┐ │
+│  │ RainbowKit │  │  Wagmi v2   │  │  TanStack React Query    │ │
+│  │ Wallet UI  │  │  + Viem     │  │  (server state cache)    │ │
+│  └─────┬──────┘  └──────┬──────┘  └──────────────────────────┘ │
+│        │                │                                       │
+│  ┌─────▼────────────────▼──────────────────────────────────┐   │
+│  │         Next.js App (React 19, App Router)               │   │
+│  │   /page   /chat   /hotel   /credits   /0g                │   │
+│  └─────────────────────────┬───────────────────────────────┘   │
+└────────────────────────────│────────────────────────────────────┘
+                             │
+┌────────────────────────────▼────────────────────────────────────┐
+│                   Next.js API Routes (Server)                   │
+│                                                                 │
+│  ┌──────────────┐  ┌──────────────────────┐  ┌──────────────┐  │
+│  │  /api/chat   │  │  /api/compute/       │  │ /api/storage/│  │
+│  │              │  │   inference          │  │  upload      │  │
+│  │  OpenAI      │  │   list-services      │  │  download    │  │
+│  │  gpt-4.1-nano│  │   setup-account      │  │  kv-write    │  │
+│  └──────┬───────┘  └──────────┬───────────┘  └──────┬───────┘  │
+└─────────│────────────────────│──────────────────────│──────────┘
+          │                    │                       │
+          ▼                    ▼                       ▼
+  ┌───────────────┐  ┌─────────────────┐   ┌──────────────────┐
+  │  OpenAI API   │  │  0G Compute     │   │  0G Storage      │
+  │  gpt-4.1-nano │  │  Network        │   │  Network         │
+  └───────────────┘  │  evmrpc-testnet │   │  0g-ts-sdk       │
+                     └─────────────────┘   └──────────────────┘
+
+          ┌────────────────────────────────────────────┐
+          │          Monad Testnet (Chain 10143)        │
+          │                                            │
+          │  ┌──────────────────┐  ┌───────────────┐  │
+          │  │ AIQueryCredits   │  │   Counter     │  │
+          │  │ .sol             │  │   .sol        │  │
+          │  │                  │  └───────────────┘  │
+          │  │ topUp()  → MON   │                     │
+          │  │ consume() → emit │                     │
+          │  │ withdraw() → MON │                     │
+          │  └──────────────────┘                     │
+          │       ↑ wagmiConfig / injected wallet      │
+          └────────────────────────────────────────────┘
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | Next.js 16 (App Router) |
+| **Language** | TypeScript 5 |
+| **Styling** | Tailwind CSS v4 |
+| **State / Data** | TanStack React Query v5 |
+| **Blockchain Network** | Monad Testnet (Chain ID: 10143, native token: MON) |
+| **Wallet / Web3** | Wagmi v2 + RainbowKit + Viem |
+| **Smart Contracts** | Solidity ^0.8.24, compiled & deployed via Hardhat |
+| **Decentralized Storage** | 0G Storage (`@0gfoundation/0g-ts-sdk`) |
+| **Decentralized AI Compute** | 0G Compute Network (`@0glabs/0g-serving-broker`) |
+| **Centralized AI** | OpenAI API (`gpt-4.1-nano`) |
+| **Contract Dev Tooling** | Hardhat + Ethers v6 + TypeChain |
+
+### Key Design Notes
+
+- **Dual AI path**: Chat uses centralized **OpenAI** (`/api/chat`); the `/0g` page routes to **decentralized 0G Compute** providers with on-chain request headers and response verification.
+- **AIQueryCredits contract**: Users deposit MON → get tokens (10,000 tokens/MON) → `consume()` emits events the backend can watch → `withdraw()` to reclaim MON. No admin, no fees.
+- **0G Storage**: File upload/download and key-value writes via the 0G SDK, server-side only.
+- **Wallet**: Injected wallet only (MetaMask etc.) via Wagmi, scoped exclusively to Monad Testnet.
+
+---
+
+## 🚀 Getting Started
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see the result.
+
+### Smart Contract Commands
+
+```bash
+# Compile contracts
+npm run compile
+
+# Deploy AIQueryCredits to Monad Testnet
+npm run deploy:credits
+
+# Deploy Counter to Monad Testnet
+npm run deploy:monad
+
+# Run contract tests
+npm run test:contracts
+```
+
+### Environment Variables
+
+Create a `.env.local` file with:
+
+```
+OPENAI_API_KEY=your_openai_api_key
+ZG_STORAGE_PRIVATE_KEY=your_wallet_private_key
+```
