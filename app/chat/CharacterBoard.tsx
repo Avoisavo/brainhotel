@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import {
   useAccount,
   useReadContract,
@@ -13,17 +14,17 @@ import { monadTestnet } from "@/lib/wagmi";
 export const TOKENS_REFETCH_EVENT = "tokens:refetch";
 
 const selectedResident = {
-  name: "Banana Barista",
-  room: "Coffee House",
-  kb: "Cafe Launch Notes",
-  tone: "fast retail ops, menus, customer rituals",
-  face: "BA",
+  name: "TungTungTung Sahur",
+  room: "Hackathon Critic AI",
+  kb: "Pitch & Demo Judge",
+  tone: "critiques ideas, demos, technical proof, and judge appeal",
+  face: "AI",
 };
 
 const boardNotes = [
-  { label: "pattern", text: "Morning queue spikes after 8:40" },
-  { label: "margin", text: "Croissant loss tracked against refill drinks" },
-  { label: "lead", text: "Same wallet appears in laundromat receipts" },
+  { label: "pitch", text: "Sharpens your one-liner, problem, and user story" },
+  { label: "demo", text: "Reviews the flow judges see in the first minute" },
+  { label: "build", text: "Checks tech depth, weak spots, and proof points" },
 ];
 
 type ChatMessage = {
@@ -165,10 +166,10 @@ export default function CharacterBoard({ open, onToggle }: { open: boolean; onTo
       aria-hidden={!open}
       style={{
         position: "fixed",
-        top: 18,
-        right: 18,
-        bottom: 18,
-        width: "clamp(520px, 52vw, 860px)",
+        top: 8,
+        right: 12,
+        bottom: 12,
+        width: "clamp(760px, 66vw, 1080px)",
         minWidth: 0,
         zIndex: 20,
         transform: open ? "translateX(0) rotate(-0.4deg)" : "translateX(calc(100% + 42px)) rotate(1.2deg)",
@@ -285,27 +286,19 @@ export default function CharacterBoard({ open, onToggle }: { open: boolean; onTo
               border: "4px solid #211108",
               boxShadow: "inset 0 -12px 0 rgba(0,0,0,0.18), 0 7px 0 rgba(72,43,16,0.45)",
             }}>
-              <div style={{
-                position: "absolute",
-                top: 11,
-                left: 42,
-                width: 30,
-                height: 10,
-                background: "#654017",
-                transform: "rotate(-20deg)",
-              }} />
-              <div style={{
-                width: 70,
-                height: 82,
-                borderRadius: "34px 28px 26px 30px",
-                background: "linear-gradient(90deg, #FFE07A, #E5A93E)",
-                border: "4px solid #2A170A",
-                display: "grid",
-                placeItems: "center",
-                boxShadow: "inset -10px -8px 0 rgba(99,88,28,0.18)",
-              }}>
-                <span style={{ fontSize: 30, letterSpacing: -2 }}>{selectedResident.face}</span>
-              </div>
+              <Image
+                src="/tung1.png"
+                alt={selectedResident.name}
+                width={112}
+                height={112}
+                style={{
+                  width: 112,
+                  height: 112,
+                  objectFit: "contain",
+                  objectPosition: "center bottom",
+                  filter: "drop-shadow(4px 6px 0 rgba(42,23,10,0.28))",
+                }}
+              />
               <span style={{
                 position: "absolute",
                 right: 8,
@@ -359,7 +352,7 @@ export default function CharacterBoard({ open, onToggle }: { open: boolean; onTo
               border: "1px solid rgba(87,57,24,0.2)",
             }} />
             <div style={{ fontFamily: "var(--font-pixel), monospace", fontSize: 8, letterSpacing: 1.4, color: "#6D451D", position: "relative" }}>
-              PINNED FINDINGS
+              KNOWLEDGE OFFERS
             </div>
             <div style={{ marginTop: 8, display: "grid", gap: 7 }}>
               {boardNotes.map((note, index) => (
@@ -423,7 +416,7 @@ export default function CharacterBoard({ open, onToggle }: { open: boolean; onTo
                   fontWeight: 900,
                   boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
                 }}>
-                  {isAgent ? "BA" : "Y"}
+                  {isAgent ? selectedResident.face : "Y"}
                 </div>
                 <div style={{
                   width: "min(100%, 640px)",
@@ -469,7 +462,7 @@ export default function CharacterBoard({ open, onToggle }: { open: boolean; onTo
                 fontWeight: 900,
                 boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
               }}>
-                BA
+                {selectedResident.face}
               </div>
               <div style={{
                 background: "#F1DEAD",
@@ -500,7 +493,7 @@ export default function CharacterBoard({ open, onToggle }: { open: boolean; onTo
           <label style={{ display: "grid", gap: 6, minWidth: 0 }}>
             <input
               aria-label="Query selected resident"
-              placeholder="Ask about hackathon project ideas..."
+              placeholder="Ask this agent to critique your hackathon idea..."
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               style={{
